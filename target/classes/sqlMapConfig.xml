@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+    <!--加载外部配置文件-->
+    <properties resource="jdbc.properties"></properties>
+    <!--开启⼆级缓存-->
+    <settings>
+        <setting name="cacheEnabled" value="true"/>
+    </settings>
+
+    <!-- 给实体类的全限定名配置别名 -->
+    <typeAliases>
+        <!-- 给单独的实体类配置别名 -->
+        <!--<typeAlias type="com.lagou.pojo.User" alias="user"></typeAlias>-->
+        <!-- 批量配置别名：该包下所有类的本身的类名：别名不区分大小写 -->
+        <package name="com.lagou.pojo"/>
+    </typeAliases>
+
+    <!-- 环境配置 -->
+    <environments default="development">
+        <environment id="development">
+            <transactionManager type="JDBC"></transactionManager>
+            <dataSource type="POOLED">
+                <property name="driver" value="${jdbc.driver}"/>
+                <property name="url" value="${jdbc.url}"/>
+                <property name="username" value="${jdbc.username}"/>
+                <property name="password" value="${jdbc.password}"/>
+            </dataSource>
+        </environment>
+    </environments>
+    <!-- mapper路径引用 -->
+    <mappers>
+        <!--    引用单个文件    -->
+        <!--    <mapper resource="IUserMapper.xml"></mapper>-->
+        <!--    <mapper resource="IOrderMapper.xml"></mapper>-->
+        <!--   批量引用：按包：mapper.java与 mapper.xml必须同包同名     -->
+        <package name="com.lagou.mapper"/>
+    </mappers>
+</configuration>

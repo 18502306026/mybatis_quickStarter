@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lagou.mapper.IUserMapper">
+
+    <!-- sql片段抽取 -->
+    <sql id="selectUser">
+        select * from user
+    </sql>
+
+    <select id="findAll" resultType="user">
+        <include refid="selectUser"></include>
+    </select>
+
+    <insert id="insertUser" parameterType="user">
+        insert into user (id,username,password,birthday) values(#{id},#{username},#{password},#{birthday});
+    </insert>
+
+    <update id="updateUser" parameterType="user">
+        update user set username=#{username} where id=#{id}
+    </update>
+
+    <delete id="deleteUser" parameterType="integer">
+        delete from user where id=#{id}
+    </delete>
+
+    <!-- foreach -->
+    <select id="findByIds" parameterType="list" resultType="user">
+        <include refid="selectUser"></include>
+        <where>
+            <foreach collection="array" open="id in (" close=")" item="id" separator=",">
+                #{id}
+            </foreach>
+        </where>
+    </select>
+
+    <!-- 1对多   -->
+    <resultMap id="userMap" type="com.lagou.pojo.User">
+        <result property="id" column="id"></result>
+        <result property="username" column="username"></result>
+        <result property="password" column="password"></result>
+        <result property="birthday" column="birthday"></result>
+        <collection property="orders" ofType="com.lagou.pojo.Orders">
+            <result property="id" column="oid"></result>
+            <result property="ordertime" column="ordertime"></result>
+            <result property="total" column="total"></result>
+        </collection>
+    </resultMap>
+    <select id="findAllUserAndOrder" resultMap="userMap">
+        select * from user a left join orders b on a.id = b.uid
+    </select>
+
+    <!-- 多对多   -->
+    <resultMap id="userAndRoleMap" type="com.lagou.pojo.User">
+        <result property="id" column="userid"></result>
+        <result property="username" column="username"></result>
+        <result property="password" column="password"></result>
+        <result property="birthday" column="birthday"></result>
+        <collection property="sysRoles" ofType="com.lagou.pojo.SysRole">
+            <result property="id" column="roleid"></result>
+            <result property="rolename" column="rolename"></result>
+            <result property="roleDesc" column="roledesc"></result>
+        </collection>
+    </resultMap>
+    <select id="findAllUserAndRole" resultMap="userAndRoleMap">
+        select * from user a left join sys_user_role b on a.id = b.userid inner join sys_role c on b.roleid=c.id
+    </select>
+
+</mapper>
