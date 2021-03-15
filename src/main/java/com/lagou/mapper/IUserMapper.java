@@ -4,6 +4,7 @@ import com.lagou.pojo.Orders;
 import com.lagou.pojo.SysRole;
 import com.lagou.pojo.User;
 import org.apache.ibatis.annotations.*;
+import org.mybatis.caches.redis.RedisCache;
 
 import java.util.List;
 
@@ -11,7 +12,7 @@ import java.util.List;
  * @author lijian
  * @create 2021-03-11 12:37
  */
-@CacheNamespace //开启二级缓存
+@CacheNamespace(implementation = RedisCache.class) //开启二级缓存
 public interface IUserMapper {
     public List<User> findAll();
     public List<User> findByIds(int[] arry);
